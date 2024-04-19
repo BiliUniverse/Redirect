@@ -12,14 +12,16 @@
 [General]
 # > TCP Force HTTP Hosts
 # 让 Surge 把 TCP 连接当作 HTTP 请求来处理。Surge HTTP 引擎将处理这些请求，所有的高级功能，如捕获、重写和脚本等都可以使用。
-force-http-engine-hosts = %APPEND% *:4480, *.mcdn.bilivideo.cn:4483, *:8000, *:8082, *.mcdn.bilivideo.cn:9102
+force-http-engine-hosts = %APPEND% *.mcdn.bilivideo.cn:486, *:4480, *.mcdn.bilivideo.cn:4483, *:8000, *:8082, *.mcdn.bilivideo.cn:9102
 
 [Script]
-BiliBili.Redirect.CDN.m4s = type=http-request, pattern=^https?:\/\/.+\.bilivideo\.com\/upgcxcode\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=
-BiliBili.Redirect.MCDN.m4s = type=http-request, pattern=^https?:\/\/(.+):(8000|8082)\/v1\/resource\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=
-BiliBili.Redirect.MCDN.m4s = type=http-request, pattern=^https?:\/\/[xy0-9]+\.mcdn\.bilivideo\.(cn|com):(4483|9102)\/upgcxcode\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=
-BiliBili.Redirect.PCDN.m4s = type=http-request, pattern=^https?:\/\/(.+\.v1d\.szbdyd\.com|.+):4480\/upgcxcode\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=Host.PCDN={{{Host.PCDN}}}
-BiliBili.Redirect.Akamaized.m4s = type=http-request, pattern=^https?:\/\/upos-(hz|bstar1)-mirrorakam\.akamaized\.net\/upgcxcode\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=Host.Akamaized={{{Host.Akamaized}}}
+BiliBili.Redirect.CDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/.+\.bilivideo\.com\/upgcxcode\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=
+BiliBili.Redirect.MCDN.live-bvc.m4s = type=http-request, pattern=^https?:\/\/[xy0-9]+\.mcdn\.bilivideo\.cn:486\/live-bvc\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=
+BiliBili.Redirect.MCDN.v1.resource.m4s = type=http-request, pattern=^https?:\/\/(.+):(8000|8082)\/v1\/resource\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=
+BiliBili.Redirect.MCDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/[xy0-9]+\.mcdn\.bilivideo\.cn:(4483|9102)\/upgcxcode\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=
+BiliBili.Redirect.PCDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/(.+):4480\/upgcxcode\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=Host.PCDN={{{Host.PCDN}}}
+BiliBili.Redirect.PCDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/(.+)\.v1d\.szbdyd\.com:9305\/([^/]+)\/upgcxcode\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=Host.PCDN={{{Host.PCDN}}}
+BiliBili.Redirect.Akamaized.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/upos-(hz|bstar1)-mirrorakam\.akamaized\.net\/upgcxcode\/, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.request.beta.js, argument=Host.Akamaized={{{Host.Akamaized}}}
 
 [MITM]
 hostname = %APPEND% *.mcdn.bilivideo.cn, upos-sz-mirror*bstar1.bilivideo.com, upos-*-mirrorakam.akamaized.net

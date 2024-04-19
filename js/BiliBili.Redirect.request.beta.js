@@ -852,7 +852,7 @@ function setENV(name, platforms, database) {
 	return { Settings, Caches, Configs };
 }
 
-const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.0(8) request.beta");
+const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.1(1012) request.beta");
 
 // 构造回复数据
 let $response = undefined;
@@ -964,6 +964,16 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							break;
 						default:
 							switch (url.port) {
+								case "486": // MCDN
+									const cdn = url.searchParams.get("cdn");
+									const sid = url.searchParams.get("sid");
+									if (cdn) {
+										url.host = `d--${cdn}.bilivideo.com`;
+										url.port = "";
+									} else if (sid) {
+										url.host = `${sid}.bilivideo.com`;
+										url.port = "";
+									}									break;
 								case "4480": // PCDN
 									url.protocol = "http";
 									url.host = url.searchParams.get("xy_usource") || Settings.Host.PCDN;
@@ -978,6 +988,12 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									url.port = "";
 									url.pathname = "";
 									url.searchParams.set("url", $request.url);
+									break;
+								case "9305": // PCDN
+									url.protocol = "http";
+									url.host = url.PATHs.shift();
+									url.port = "";
+									url.pathname = url.PATHs.join("/");
 									break;
 							}							break;
 					}					break;
