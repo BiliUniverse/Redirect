@@ -5,7 +5,7 @@ import ENV from "./ENV/ENV.mjs";
 import Database from "./database/BiliBili.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.0(8) request.beta");
+const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.0(8) request");
 
 // 构造回复数据
 let $response = undefined;

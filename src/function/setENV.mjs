@@ -4,7 +4,6 @@ import _ from '../ENV/Lodash.mjs'
 /**
  * Set Environment Variables
  * @author VirgilClyne
- * @param {Object} $ - ENV
  * @param {String} name - Persistent Store Key
  * @param {Array} platforms - Platform Names
  * @param {Object} database - Default DataBase

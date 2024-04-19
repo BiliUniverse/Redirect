@@ -745,37 +745,6 @@ class ENV {
 	}
 }
 
-class URI {
-	static name = "URI";
-	static version = "1.2.7";
-	static about() { return console.log(`\n🟧 ${this.name} v${this.version}\n`) };
-	static #json = { scheme: "", host: "", path: "", query: {} };
-
-	static parse(url) {
-		const URLRegex = /(?:(?<scheme>.+):\/\/(?<host>[^/]+))?\/?(?<path>[^?]+)?\??(?<query>[^?]+)?/;
-		let json = url.match(URLRegex)?.groups ?? null;
-		if (json?.path) json.paths = json.path.split("/"); else json.path = "";
-		//if (json?.paths?.at(-1)?.includes(".")) json.format = json.paths.at(-1).split(".").at(-1);
-		if (json?.paths) {
-			const fileName = json.paths[json.paths.length - 1];
-			if (fileName?.includes(".")) {
-				const list = fileName.split(".");
-				json.format = list[list.length - 1];
-			}
-		}
-		if (json?.query) json.query = Object.fromEntries(json.query.split("&").map((param) => param.split("=")));
-		return json
-	};
-
-	static stringify(json = this.#json) {
-		let url = "";
-		if (json?.scheme && json?.host) url += json.scheme + "://" + json.host;
-		if (json?.path) url += (json?.host) ? "/" + json.path : json.path;
-		if (json?.query) url += "?" + Object.entries(json.query).map(param => param.join("=")).join("&");
-		return url
-	};
-}
-
 var Settings$1 = {
 	Switch: true
 };
@@ -790,7 +759,12 @@ var Default$1 = /*#__PURE__*/Object.freeze({
 });
 
 var Settings = {
-	Switch: true
+	Switch: true,
+	Host: {
+		Akamaized: "upos-sz-mirrorali.bilivideo.com",
+		BStar: "upos-sz-mirrorali.bilivideo.com",
+		PCDN: "upos-sz-mirrorali.bilivideo.com"
+	}
 };
 var BiliBili_Redirect = {
 	Settings: Settings
@@ -862,7 +836,6 @@ function getStorage(key, names, database) {
 /**
  * Set Environment Variables
  * @author VirgilClyne
- * @param {Object} $ - ENV
  * @param {String} name - Persistent Store Key
  * @param {Array} platforms - Platform Names
  * @param {Object} database - Default DataBase
@@ -879,18 +852,18 @@ function setENV(name, platforms, database) {
 	return { Settings, Caches, Configs };
 }
 
-const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.1.0(1) request.beta");
+const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.0(8) request.beta");
 
 // 构造回复数据
 let $response = undefined;
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method; URL.host; URL.path; URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname; url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
@@ -962,12 +935,57 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "OPTIONS":
 				case undefined: // QX牛逼，script-echo-response不返回method
 				default:
-					break;
+					// 主机判断
+					switch (HOST) {
+						case "upos-sz-mirrorali.bilivideo.com": // 阿里云 CDN
+						case "upos-sz-mirroralib.bilivideo.com": // 阿里云 CDN
+						case "upos-sz-mirroralio1.bilivideo.com": // 阿里云 CDN
+						case "upos-sz-mirrorcos.bilivideo.com": // 腾讯云 CDN
+						case "upos-sz-mirrorcosb.bilivideo.com": // 腾讯云 CDN，VOD 加速类型
+						case "upos-sz-mirrorcoso1.bilivideo.com": // 腾讯云 CDN
+						case "upos-sz-mirrorhw.bilivideo.com": // 华为云 CDN，融合 CDN
+						case "upos-sz-mirrorhwb.bilivideo.com": // 华为云 CDN，融合 CDN
+						case "upos-sz-mirrorhwo1.bilivideo.com": // 华为云 CDN，融合 CDN
+						case "upos-sz-mirror08c.bilivideo.com": // 华为云 CDN，融合 CDN
+						case "upos-sz-mirror08h.bilivideo.com": // 华为云 CDN，融合 CDN
+						case "upos-sz-mirror08ct.bilivideo.com": // 华为云 CDN，融合 CDN
+						case "upos-sz-mirroraliov.bilivideo.com": // 阿里云 CDN，海外
+						case "upos-sz-mirrorcosov.bilivideo.com": // 腾讯云 CDN，海外
+						case "upos-sz-mirrorhwov.bilivideo.com": // 华为云 CDN，海外
+							break;
+						case "upos-hz-mirrorakam.akamaized.net": // Akamai CDN，海外，有参数校验，其他类型的 CDN 不能直接替换为此 Host。但反过来可以。
+							url.host = Settings.Host.Akamaized;
+							break;
+						case "upos-sz-mirroralibstar1.bilivideo.com": // 阿里云 CDN，海外（东南亚），其他类型的 CDN 应该不能替换为此 Host，但反过来可以。
+						case "upos-sz-mirrorcosbstar1.bilivideo.com": // 腾讯云 CDN，海外（东南亚），其他类型的 CDN 应该不能替换为此 Host，但反过来可以。
+						case "upos-sz-mirrorhwbstar1.bilivideo.com": // 华为云 CDN，海外（东南亚），其他类型的 CDN 应该不能替换为此 Host，但反过来可以。
+						case "upos-bstar1-mirrorakam.akamaized.net": // Akamai CDN，海外（东南亚），有参数校验，其他类型的 CDN 不能直接替换为此 Host。但反过来可以。
+							url.host = Settings.Host.BStar;
+							break;
+						default:
+							switch (url.port) {
+								case "4480": // PCDN
+									url.protocol = "http";
+									url.host = url.searchParams.get("xy_usource") || Settings.Host.PCDN;
+									url.port = "";
+									break;
+								case "4483": // MCDN
+								case "8000": // MCDN
+								case "8082": // MCDN
+								case "9102": // MCDN
+									url.protocol = "https";
+									url.hostname = "proxy-tf-all-ws.bilivideo.com";
+									url.port = "";
+									url.pathname = "";
+									url.searchParams.set("url", $request.url);
+									break;
+							}							break;
+					}					break;
 				case "CONNECT":
 				case "TRACE":
 					break;
-			}			if ($request.headers?.Host) $request.headers.Host = URL.host;
-			$request.url = URI.stringify(URL);
+			}			if ($request.headers?.Host) $request.headers.Host = url.host;
+			$request.url = url.toString();
 			$.log(`🚧 调试信息`, `$request.url: ${$request.url}`, "");
 			break;
 		case false:
