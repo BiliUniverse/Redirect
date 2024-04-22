@@ -13,17 +13,17 @@ let $response = undefined;
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-$.log(`⚠ url: ${url.toJSON()}`, "");
+//$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
 $.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
-$.log(`⚠ FORMAT: ${FORMAT}`, "");
+//$.log(`⚠ FORMAT: ${FORMAT}`, "");
 !(async () => {
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV("BiliBili", "Redirect", Database);
-	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
+	//$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
@@ -155,7 +155,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 			};
 			if ($request.headers?.Host) $request.headers.Host = url.host;
 			$request.url = url.toString();
-			$.log(`🚧 调试信息`, `$request.url: ${$request.url}`, "");
+			//$.log(`🚧 调试信息`, `$request.url: ${$request.url}`, "");
 			break;
 		case false:
 			break;
