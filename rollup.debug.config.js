@@ -11,4 +11,13 @@ export default [
 		},
 		plugins: [json(), commonjs()]
 	},
+	{
+		input: 'src/BiliBili.Redirect.response.beta.js',
+		output: {
+			file: 'js/BiliBili.Redirect.response.beta.js',
+			format: 'es',
+			banner: '/* README: https://github.com/BiliUniverse */',
+		},
+		plugins: [json(), commonjs()]
+	},
 ];
