@@ -10705,7 +10705,7 @@ class MessageType {
 
 // import { Any } from "./protobuf/google/protobuf/any.js";
 
-const $ = new ENV("📺 BiliBili: 🌐 Redirect v0.3.0(2008) repsonse.beta");
+const $ = new ENV("📺 BiliBili: 🌐 Redirect v0.3.1(2009) repsonse.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -11064,7 +11064,20 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 															let addedNumber = reader.int32(); // 7777
 															$.log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, addedNumber: ${addedNumber}`, "");
 														});
-													}													$.log(`🚧 data: ${JSON.stringify(data)}`, "");
+													}													data.vodInfo.streamList = data.vodInfo.streamList.map(stream => {
+														switch (stream?.content?.oneofKind) {
+															case "dashVideo":
+																stream.content.dashVideo.baseUrl = stream.content.dashVideo.backupUrl.at(-1);
+																break;
+															case "SegmentVideo":
+																stream.content.segmentVideo.segment = stream.content.segmentVideo.segment.map(segment => {
+																	segment.url = segment.backupUrl.at(-1);
+																	return segment;
+																});
+																break;
+														}														return stream;
+													});
+													$.log(`🚧 data: ${JSON.stringify(data)}`, "");
 													body = PlayViewUniteReply.toBinary(data);
 													break;
 											}											break;

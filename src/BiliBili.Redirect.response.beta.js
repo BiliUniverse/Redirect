@@ -10,7 +10,7 @@ import pako from "../node_modules/pako/dist/pako.esm.mjs";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 // import { Any } from "./protobuf/google/protobuf/any.js";
 
-const $ = new ENV("📺 BiliBili: 🌐 Redirect v0.3.0(2008) repsonse.beta");
+const $ = new ENV("📺 BiliBili: 🌐 Redirect v0.3.1(2009) repsonse.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -388,6 +388,20 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 															$.log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, addedNumber: ${addedNumber}`, "");
 														});
 													};
+													data.vodInfo.streamList = data.vodInfo.streamList.map(stream => {
+														switch (stream?.content?.oneofKind) {
+															case "dashVideo":
+																stream.content.dashVideo.baseUrl = stream.content.dashVideo.backupUrl.at(-1);
+																break;
+															case "SegmentVideo":
+																stream.content.segmentVideo.segment = stream.content.segmentVideo.segment.map(segment => {
+																	segment.url = segment.backupUrl.at(-1);
+																	return segment;
+																});
+																break;
+														};
+														return stream;
+													});
 													$.log(`🚧 data: ${JSON.stringify(data)}`, "");
 													body = PlayViewUniteReply.toBinary(data);
 													break;
