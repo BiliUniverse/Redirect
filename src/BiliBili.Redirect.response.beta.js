@@ -10,7 +10,7 @@ import pako from "../node_modules/pako/dist/pako.esm.mjs";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 // import { Any } from "./protobuf/google/protobuf/any.js";
 
-const $ = new ENV("📺 BiliBili: 🌐 Redirect v0.3.0(2007) repsonse.beta");
+const $ = new ENV("📺 BiliBili: 🌐 Redirect v0.3.0(2008) repsonse.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -286,7 +286,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 														{ no: 7, name: "need_login", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
 														{ no: 8, name: "intact", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
 														{ no: 9, name: "no_rexcode", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-														{ no: 10, name: "attribute", kind: "scalar", T: 3 /*ScalarType.INT64*/, L: 0 /*LongType.BIGINT*/ },
+														{ no: 10, name: "attribute", kind: "scalar", T: 3 /*ScalarType.INT64*/, L: 2 /*LongType.NUMBER*/ },
 														{ no: 11, name: "new_description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
 														{ no: 12, name: "display_desc", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
 														{ no: 13, name: "superscript", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
@@ -306,7 +306,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 														{ no: 3, name: "bandwidth", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
 														{ no: 4, name: "codecid", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
 														{ no: 5, name: "md5", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-														{ no: 6, name: "size", kind: "scalar", T: 4 /*ScalarType.UINT64*/, L: 0 /*LongType.BIGINT*/ },
+														{ no: 6, name: "size", kind: "scalar", T: 4 /*ScalarType.UINT64*/, L: 2 /*LongType.NUMBER*/ },
 														{ no: 7, name: "audio_id", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
 														{ no: 8, name: "no_rexcode", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
 														{ no: 9, name: "frame_rate", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
@@ -329,8 +329,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 												constructor() {
 													super("bilibili.playershared.ResponseUrl", [
 														{ no: 1, name: "order", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
-														{ no: 2, name: "length", kind: "scalar", T: 4 /*ScalarType.UINT64*/, L: 0 /*LongType.BIGINT*/ },
-														{ no: 3, name: "size", kind: "scalar", T: 4 /*ScalarType.UINT64*/, L: 0 /*LongType.BIGINT*/ },
+														{ no: 2, name: "length", kind: "scalar", T: 4 /*ScalarType.UINT64*/, L: 2 /*LongType.NUMBER*/ },
+														{ no: 3, name: "size", kind: "scalar", T: 4 /*ScalarType.UINT64*/, L: 2 /*LongType.NUMBER*/ },
 														{ no: 4, name: "url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
 														{ no: 5, name: "backup_url", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ },
 														{ no: 6, name: "md5", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
