@@ -10,7 +10,7 @@ import pako from "../node_modules/pako/dist/pako.esm.mjs";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 // import { Any } from "./protobuf/google/protobuf/any.js";
 
-const $ = new ENV("📺 BiliBili: 🌐 Redirect v0.3.1(2009) repsonse.beta");
+const $ = new ENV("📺 BiliBili: 🌐 Redirect v0.3.2(2010) repsonse.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -317,14 +317,28 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 												}
 											}
 											const DashVideo = new DashVideo$Type();
-											class SegmentVideo$Type extends MessageType {
+											class FragmentVideo$Type extends MessageType {
 												constructor() {
-													super("bilibili.playershared.SegmentVideo", [
-														{ no: 1, name: "segment", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => ResponseUrl }
+													super("bilibili.playershared.FragmentVideo", [
+														{ no: 1, name: "videos", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => FragmentVideoInfo }
 													]);
 												}
 											}
-											const SegmentVideo = new SegmentVideo$Type();
+											const FragmentVideo = new FragmentVideo$Type();
+											class FragmentVideoInfo$Type extends MessageType {
+												constructor() {
+													super("bilibili.playershared.FragmentVideoInfo", [
+														//{ no: 1, name: "fragment_info", kind: "message", T: () => FragmentInfo },
+														{ no: 2, name: "vod_info", kind: "message", T: () => VodInfo },
+														//{ no: 3, name: "play_arc_conf", kind: "message", T: () => PlayArcConf },
+														//{ no: 4, name: "dimension", kind: "message", T: () => Dimension },
+														{ no: 5, name: "timelength", kind: "scalar", T: 3 /*ScalarType.INT64*/, L: 2 /*LongType.NUMBER*/ },
+														//{ no: 6, name: "video_type", kind: "enum", T: () => ["bilibili.playershared.BizType", BizType, "BIZ_TYPE_"] },
+														{ no: 7, name: "playable_status", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+													]);
+												}
+											}
+											const FragmentVideoInfo = new FragmentVideoInfo$Type();
 											class ResponseUrl$Type extends MessageType {
 												constructor() {
 													super("bilibili.playershared.ResponseUrl", [
@@ -338,6 +352,14 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 												}
 											}
 											const ResponseUrl = new ResponseUrl$Type();
+											class SegmentVideo$Type extends MessageType {
+												constructor() {
+													super("bilibili.playershared.SegmentVideo", [
+														{ no: 1, name: "segment", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => ResponseUrl }
+													]);
+												}
+											}
+											const SegmentVideo = new SegmentVideo$Type();
 											class VodInfo$Type extends MessageType {
 												constructor() {
 													super("bilibili.playershared.VodInfo", [
@@ -349,7 +371,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 														//{ no: 6, name: "dash_audio", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => DashItem },
 														//{ no: 7, name: "dolby", kind: "message", T: () => DolbyItem },
 														//{ no: 8, name: "volume", kind: "message", T: () => VolumeInfo },
-														//{ no: 9, name: "loss_less_item", kind: "message", T: () => LossLessItem }
+														//{ no: 9, name: "loss_less_item", kind: "message", T: () => LossLessItem },
+														//{ no: 10, name: "support_project", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
 													]);
 												}
 											}
@@ -368,7 +391,9 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 																//{ no: 5, name: "supplement", kind: "message", T: () => Any },
 																//{ no: 6, name: "play_arc", kind: "message", T: () => PlayArc },
 																//{ no: 7, name: "qn_trial_info", kind: "message", T: () => QnTrialInfo },
-																//{ no: 8, name: "history", kind: "message", T: () => History }
+																//{ no: 8, name: "history", kind: "message", T: () => History },
+																//{ no: 9, name: "view_info", kind: "message", T: () => ViewInfo },
+																{ no: 10, name: "fragment_video", kind: "message", T: () => FragmentVideo }
 															]);
 														}
 													}
