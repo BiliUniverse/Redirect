@@ -1,0 +1,19 @@
+#!name=📺 BiliBili: 🔀 Redirect β
+#!desc=(BETA)\n哔哩哔哩：重定向（自定义 CDN）
+#!openUrl=http://boxjs.com/#/app/BiliBili.Redirect
+#!author=VirgilClyne
+#!homepage=https://redirect.biliuniverse.io
+#!manual=https://manual.biliuniverse.io
+#!icon=https://github.com/BiliUniverse/Redirect/raw/main/src/assets/icon_rounded_108x.png
+#!category=📺 BiliUniverse
+#!arguments=Host.Akamaized:upos-sz-mirrorali.bilivideo.com,Host.BStar:upos-sz-mirrorali.bilivideo.com,Host.PCDN:upos-sz-mirrorali.bilivideo.com
+#!arguments-desc=Host.Akamaized: 重定向港澳台 CDN 主机名\nHost.BStar: 重定向国际版 CDN 主机名\nHost.PCDN: 重定向 PCDN 主机名
+
+[Script]
+BiliBili.Global.playerunite.v1.Player.grpc = type=http-response, pattern=^https?:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.playerunite\.v1\.Player\/PlayViewUnite$, requires-body=1, binary-body-mode=1, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.response.beta.js, argument=
+BiliBili.Global.player.v2.PlayURL.grpc = type=http-response, pattern=^https?:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.pgc\.gateway\.player\.v2\.PlayURL\/PlayView$, requires-body=1, binary-body-mode=1, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.response.beta.js, argument=
+BiliBili.Global.player.playurl.json = type=http-response, pattern=^https?:\/\/api\.bili(bili\.com|api\.net)\/pgc\/player\/(api|web)\/playurl(\/html5)?\?, requires-body=1, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.response.beta.js, argument=
+BiliBili.Global.player.v2.playurl.json = type=http-response, pattern=^https?:\/\/api\.bili(bili\.com|api\.net)\/pgc\/player\/web\/v2\/playurl\?, requires-body=1, engine=webview, debug=1, script-path=https://raw.githubusercontent.com/BiliUniverse/Redirect/beta/js/BiliBili.Redirect.response.beta.js, argument=
+
+[MITM]
+hostname = %APPEND% app.bilibili.com, app.biliapi.net, api.bilibili.com, api.biliapi.net, grpc.biliapi.net
