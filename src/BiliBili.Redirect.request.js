@@ -5,7 +5,7 @@ import ENV from "./ENV/ENV.mjs";
 import Database from "./database/BiliBili.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.0(8) request");
+const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.2(1014) request");
 
 // 构造回复数据
 let $response = undefined;
@@ -120,19 +120,30 @@ const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["conten
 						case "upos-sz-mirrorhwov.bilivideo.com": // 华为云 CDN，海外
 							break;
 						case "upos-hz-mirrorakam.akamaized.net": // Akamai CDN，海外，有参数校验，其他类型的 CDN 不能直接替换为此 Host。但反过来可以。
-							url.host = Settings.Host.Akamaized;
+							url.hostname = Settings.Host.Akamaized;
 							break;
 						case "upos-sz-mirroralibstar1.bilivideo.com": // 阿里云 CDN，海外（东南亚），其他类型的 CDN 应该不能替换为此 Host，但反过来可以。
 						case "upos-sz-mirrorcosbstar1.bilivideo.com": // 腾讯云 CDN，海外（东南亚），其他类型的 CDN 应该不能替换为此 Host，但反过来可以。
 						case "upos-sz-mirrorhwbstar1.bilivideo.com": // 华为云 CDN，海外（东南亚），其他类型的 CDN 应该不能替换为此 Host，但反过来可以。
 						case "upos-bstar1-mirrorakam.akamaized.net": // Akamai CDN，海外（东南亚），有参数校验，其他类型的 CDN 不能直接替换为此 Host。但反过来可以。
-							url.host = Settings.Host.BStar;
+							url.hostname = Settings.Host.BStar;
 							break;
 						default:
 							switch (url.port) {
+								case "486": // MCDN
+									const cdn = url.searchParams.get("cdn");
+									const sid = url.searchParams.get("sid");
+									if (cdn) {
+										url.hostname = `d1--${cdn}.bilivideo.com`;
+										url.port = "";
+									} else if (sid) {
+										url.hostname = `${sid}.bilivideo.com`;
+										url.port = "";
+									};
+									break;
 								case "4480": // PCDN
 									url.protocol = "http";
-									url.host = url.searchParams.get("xy_usource") || Settings.Host.PCDN;
+									url.hostname = url.searchParams.get("xy_usource") || Settings.Host.PCDN;
 									url.port = "";
 									break;
 								case "4483": // MCDN
@@ -145,6 +156,12 @@ const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["conten
 									url.pathname = "";
 									url.searchParams.set("url", $request.url);
 									break;
+								case "9305": // PCDN
+									url.protocol = "http";
+									url.hostname = url.PATHs.shift();
+									url.port = "";
+									url.pathname = url.PATHs.join("/");
+									break;
 							};
 							break;
 					};
@@ -153,7 +170,7 @@ const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["conten
 				case "TRACE":
 					break;
 			};
-			if ($request.headers?.Host) $request.headers.Host = url.host;
+			if ($request.headers?.Host) $request.headers.Host = url.hostname;
 			$request.url = url.toString();
 			//$.log(`🚧 调试信息`, `$request.url: ${$request.url}`, "");
 			break;
