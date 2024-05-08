@@ -763,7 +763,8 @@ var Settings = {
 	Host: {
 		Akamaized: "upos-sz-mirrorali.bilivideo.com",
 		BStar: "upos-sz-mirrorali.bilivideo.com",
-		PCDN: "upos-sz-mirrorali.bilivideo.com"
+		PCDN: "upos-sz-mirrorali.bilivideo.com",
+		MCDN: "proxy-tf-all-ws.bilivideo.com"
 	}
 };
 var BiliBili_Redirect = {
@@ -852,7 +853,7 @@ function setENV(name, platforms, database) {
 	return { Settings, Caches, Configs };
 }
 
-const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.2(1014) request.beta");
+const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.3(1015) request.beta");
 
 // 构造回复数据
 let $response = undefined;
@@ -984,7 +985,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 								case "8082": // MCDN
 								case "9102": // MCDN
 									url.protocol = "https";
-									url.hostname = "proxy-tf-all-ws.bilivideo.com";
+									url.hostname = Settings.Host.MCDN;
 									url.port = "";
 									url.pathname = "";
 									url.searchParams.set("url", $request.url);

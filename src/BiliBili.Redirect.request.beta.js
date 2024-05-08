@@ -5,7 +5,7 @@ import ENV from "./ENV/ENV.mjs";
 import Database from "./database/BiliBili.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.2(1014) request.beta");
+const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.3(1015) request.beta");
 
 // 构造回复数据
 let $response = undefined;
@@ -151,7 +151,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 								case "8082": // MCDN
 								case "9102": // MCDN
 									url.protocol = "https";
-									url.hostname = "proxy-tf-all-ws.bilivideo.com"
+									url.hostname = Settings.Host.MCDN;
 									url.port = "";
 									url.pathname = "";
 									url.searchParams.set("url", $request.url);
