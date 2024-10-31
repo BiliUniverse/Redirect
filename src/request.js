@@ -1,39 +1,37 @@
-import _ from './ENV/Lodash.mjs'
-import $Storage from './ENV/$Storage.mjs'
-import ENV from "./ENV/ENV.mjs";
-
-import Database from "./database/BiliBili.mjs";
+import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
+import { gRPC } from "@nsnanocat/util";
+import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
-
-const $ = new ENV("📺 BiliBili: 🔀 Redirect v0.2.3(1015) request.beta");
-
 // 构造回复数据
 let $response = undefined;
-
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-$.log(`⚠ url: ${url.toJSON()}`, "");
+//log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
-$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
+log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
-$.log(`⚠ FORMAT: ${FORMAT}`, "");
+//log(`⚠ FORMAT: ${FORMAT}`, "");
 !(async () => {
-	// 读取设置
-	const { Settings, Caches, Configs } = setENV("BiliBili", "Redirect", Database);
-	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
+	/**
+	 * 设置
+	 * @type {{Settings: import('./types').Settings}}
+	 */
+	const { Settings, Caches, Configs } = setENV("BiliBili", "Redirect", database);
+	//log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
-		default:
+		default: {
 			// 创建空数据
-			let body = {};
+			const body = {};
 			// 方法判断
 			switch (METHOD) {
 				case "POST":
 				case "PUT":
 				case "PATCH":
+				// biome-ignore lint/suspicious/noFallthroughSwitchClause: <explanation>
 				case "DELETE":
 					// 格式判断
 					switch (FORMAT) {
@@ -48,7 +46,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 						case "application/vnd.apple.mpegurl":
 						case "audio/mpegurl":
 							//body = M3U8.parse($request.body);
-							//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+							//log(`🚧 body: ${JSON.stringify(body)}`, "");
 							//$request.body = M3U8.stringify(body);
 							break;
 						case "text/xml":
@@ -58,19 +56,19 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 						case "application/plist":
 						case "application/x-plist":
 							//body = XML.parse($request.body);
-							//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+							//log(`🚧 body: ${JSON.stringify(body)}`, "");
 							//$request.body = XML.stringify(body);
 							break;
 						case "text/vtt":
 						case "application/vtt":
 							//body = VTT.parse($request.body);
-							//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+							//log(`🚧 body: ${JSON.stringify(body)}`, "");
 							//$request.body = VTT.stringify(body);
 							break;
 						case "text/json":
 						case "application/json":
 							//body = JSON.parse($request.body ?? "{}");
-							//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+							//log(`🚧 body: ${JSON.stringify(body)}`, "");
 							//$request.body = JSON.stringify(body);
 							break;
 						case "application/protobuf":
@@ -78,10 +76,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 						case "application/vnd.google.protobuf":
 						case "application/grpc":
 						case "application/grpc+proto":
-						case "application/octet-stream":
-							//$.log(`🚧 $request.body: ${JSON.stringify($request.body)}`, "");
-							let rawBody = $.isQuanX() ? new Uint8Array($request.bodyBytes ?? []) : $request.body ?? new Uint8Array();
-							//$.log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+						case "application/octet-stream": {
+							//log(`🚧 $request.body: ${JSON.stringify($request.body)}`, "");
+							let rawBody = ($platform === "Quantumult X") ? new Uint8Array($request.bodyBytes ?? []) : $request.body ?? new Uint8Array();
+							//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 							switch (FORMAT) {
 								case "application/protobuf":
 								case "application/x-protobuf":
@@ -89,11 +87,14 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									break;
 								case "application/grpc":
 								case "application/grpc+proto":
+									rawBody = gRPC.decode(rawBody);
+									rawBody = gRPC.encode(rawBody);
 									break;
 							};
 							// 写入二进制数据
 							$request.body = rawBody;
 							break;
+						}
 					};
 					//break; // 不中断，继续处理URL
 				case "GET":
@@ -130,7 +131,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							break;
 						default:
 							switch (url.port) {
-								case "486": // MCDN
+								case "486": { // MCDN
 									const cdn = url.searchParams.get("cdn");
 									const sid = url.searchParams.get("sid");
 									if (cdn) {
@@ -141,6 +142,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										url.port = "";
 									};
 									break;
+								}
 								case "4480": // PCDN
 									url.protocol = "http";
 									url.hostname = url.searchParams.get("xy_usource") || Settings.Host.PCDN;
@@ -172,32 +174,36 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 			};
 			if ($request.headers?.Host) $request.headers.Host = url.hostname;
 			$request.url = url.toString();
-			$.log(`🚧 调试信息`, `$request.url: ${$request.url}`, "");
+			//log("🚧 调试信息", `$request.url: ${$request.url}`, "");
 			break;
+		}
 		case false:
 			break;
 	};
 })()
-	.catch((e) => $.logErr(e))
-	.finally(() => {
-		switch ($response) {
-			default: // 有构造回复数据，返回构造的回复数据
-				//$.log(`🚧 finally`, `echo $response: ${JSON.stringify($response, null, 2)}`, "");
-				if ($response.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
-				if ($response.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				if ($.isQuanX()) {
+.catch(e => logError(e))
+.finally(() => {
+	switch ($response) {
+		default: // 有构造回复数据，返回构造的回复数据
+			//log(`🚧 finally`, `echo $response: ${JSON.stringify($response, null, 2)}`, "");
+			if ($response.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
+			if ($response.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
+			switch ($platform) {
+				default:
+					done({ response: $response });
+					break;
+				case "Quantumult X":
 					if (!$response.status) $response.status = "HTTP/1.1 200 OK";
 					delete $response.headers?.["Content-Length"];
 					delete $response.headers?.["content-length"];
 					delete $response.headers?.["Transfer-Encoding"];
-					$.done($response);
-				} else $.done({ response: $response });
-				break;
-			case undefined: // 无构造回复数据，发送修改的请求数据
-				//$.log(`🚧 finally`, `$request: ${JSON.stringify($request, null, 2)}`, "");
-				$.done($request);
-				break;
-		};
-	})
-
-/***************** Function *****************/
+					done($response);
+					break;
+			}
+			break;
+		case undefined: // 无构造回复数据，发送修改的请求数据
+			//log(`🚧 finally`, `$request: ${JSON.stringify($request, null, 2)}`, "");
+			done($request);
+			break;
+	}
+});

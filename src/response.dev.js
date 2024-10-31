@@ -1,47 +1,42 @@
-import _ from './ENV/Lodash.mjs'
-import $Storage from './ENV/$Storage.mjs'
-import ENV from "./ENV/ENV.mjs";
-
-import Database from "./database/BiliBili.mjs";
+import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
+import { gRPC } from "@nsnanocat/util";
+import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
-import addgRPCHeader from "./function/addgRPCHeader.mjs";
-
-import pako from "../node_modules/pako/dist/pako.esm.mjs";
-import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
+import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "@protobuf-ts/runtime/build/es2015/index.js";
 // import { Any } from "./protobuf/google/protobuf/any.js";
-
-const $ = new ENV("📺 BiliBili: 🌐 Redirect v0.3.2(2010) repsonse.beta");
-
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-$.log(`⚠ url: ${url.toJSON()}`, "");
+log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
-$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
+log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}`, "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-$.log(`⚠ FORMAT: ${FORMAT}`, "");
+log(`⚠ FORMAT: ${FORMAT}`, "");
 !(async () => {
-	// 读取设置
-	const { Settings, Caches, Configs } = setENV("BiliBili", "Redirect", Database);
-	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
+	/**
+	 * 设置
+	 * @type {{Settings: import('./types').Settings}}
+	 */
+	const { Settings, Caches, Configs } = setENV("BiliBili", "Redirect", database);
+	log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
-		default:
+		default: {
 			// 创建空数据
-			let body = { "code": 0, "message": "0", "data": {} };
+			let body = { code: 0, message: "0", data: {} };
 			// 信息组
-			let infoGroup = {
-				"seasonTitle": url.searchParams.get("season_title"),
-				"seasonId": parseInt(url.searchParams.get("season_id"), 10) || undefined,
-				"epId": parseInt(url.searchParams.get("ep_id"), 10) || undefined,
-				"mId": parseInt(url.searchParams.get("mid") || url.searchParams.get("vmid"), 10) || undefined,
-				"evaluate": undefined,
-				"keyword": url.searchParams.get("keyword"),
-				"locale": url.searchParams.get("locale"),
-				"locales": [],
-				"type": "UGC"
+			const infoGroup = {
+				seasonTitle: url.searchParams.get("season_title"),
+				seasonId: Number.parseInt(url.searchParams.get("season_id"), 10) || undefined,
+				epId: Number.parseInt(url.searchParams.get("ep_id"), 10) || undefined,
+				mId: Number.parseInt(url.searchParams.get("mid") || url.searchParams.get("vmid"), 10) || undefined,
+				evaluate: undefined,
+				keyword: url.searchParams.get("keyword"),
+				locale: url.searchParams.get("locale"),
+				locales: [],
+				type: "UGC",
 			};
 			// 格式判断
 			switch (FORMAT) {
@@ -56,7 +51,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
 					//body = M3U8.parse($response.body);
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
@@ -66,13 +61,13 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist":
 					//body = XML.parse($response.body);
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = XML.stringify(body);
 					break;
 				case "text/vtt":
 				case "application/vtt":
 					//body = VTT.parse($response.body);
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = VTT.stringify(body);
 					break;
 				case "text/json":
@@ -108,16 +103,16 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 											break;
 										default:
 											break;
-									};
+									}
 									break;
 								case "/pgc/view/v2/app/season": // 番剧页面-内容-app
 									break;
 								case "/pgc/view/web/season": // 番剧-内容-web
 								case "/pgc/view/pc/season": // 番剧-内容-pc
 									break;
-							};
+							}
 							break;
-					};
+					}
 					$response.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
@@ -125,10 +120,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/vnd.google.protobuf":
 				case "application/grpc":
 				case "application/grpc+proto":
-				case "application/octet-stream":
-					//$.log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
-					let rawBody = $.isQuanX() ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
-					//$.log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+				case "application/octet-stream": {
+					//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
+					let rawBody = $platform === "Quantumult X" ? new Uint8Array($response.bodyBytes ?? []) : ($response.body ?? new Uint8Array());
+					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					switch (FORMAT) {
 						case "application/protobuf":
 						case "application/x-protobuf":
@@ -136,29 +131,20 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							break;
 						case "application/grpc":
 						case "application/grpc+proto":
-							// 先拆分B站gRPC校验头和protobuf数据体
-							let header = rawBody.slice(0, 5);
-							body = rawBody.slice(5);
-							// 处理response压缩protobuf数据体
-							switch (header?.[0]) {
-								case 0: // unGzip
-									break;
-								case 1: // Gzip
-									body = pako.ungzip(body);
-									header[0] = 0; // unGzip
-									break;
-							};
+							rawBody = gRPC.decode(rawBody);
 							// 解析链接并处理protobuf数据
+							// 主机判断
 							switch (HOST) {
 								case "grpc.biliapi.net": // HTTP/2
-								case "app.bilibili.com": // HTTP/1.1
+								case "app.bilibili.com": {
+									// HTTP/1.1
 									/******************  initialization start  *******************/
 									// protobuf/google/protobuf/any.proto
 									class Any$Type extends MessageType {
 										constructor() {
 											super("google.protobuf.Any", [
 												{ no: 1, name: "type_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-												{ no: 2, name: "value", kind: "scalar", T: 12 /*ScalarType.BYTES*/ }
+												{ no: 2, name: "value", kind: "scalar", T: 12 /*ScalarType.BYTES*/ },
 											]);
 										}
 										/**
@@ -168,23 +154,22 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										 */
 										pack(message, type) {
 											return {
-												typeUrl: this.typeNameToUrl(type.typeName), value: type.toBinary(message),
+												typeUrl: this.typeNameToUrl(type.typeName),
+												value: type.toBinary(message),
 											};
 										}
 										/**
 										 * Unpack the message from the `Any`.
 										 */
 										unpack(any, type, options) {
-											if (!this.contains(any, type))
-												throw new Error("Cannot unpack google.protobuf.Any with typeUrl '" + any.typeUrl + "' as " + type.typeName + ".");
+											if (!this.contains(any, type)) throw new Error("Cannot unpack google.protobuf.Any with typeUrl '" + any.typeUrl + "' as " + type.typeName + ".");
 											return type.fromBinary(any.value, options);
 										}
 										/**
 										 * Does the given `Any` contain a packed message of the given type?
 										 */
 										contains(any, type) {
-											if (!any.typeUrl.length)
-												return false;
+											if (!any.typeUrl.length) return false;
 											let wants = typeof type == "string" ? type : type.typeName;
 											let has = this.typeUrlToName(any.typeUrl);
 											return wants === has;
@@ -199,55 +184,44 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										 * `google.protobuf.Any` from JSON format.
 										 */
 										internalJsonWrite(any, options) {
-											if (any.typeUrl === "")
-												return {};
+											if (any.typeUrl === "") return {};
 											let typeName = this.typeUrlToName(any.typeUrl);
 											let opt = jsonWriteOptions(options);
 											let type = opt.typeRegistry?.find(t => t.typeName === typeName);
-											if (!type)
-												throw new globalThis.Error("Unable to convert google.protobuf.Any with typeUrl '" + any.typeUrl + "' to JSON. The specified type " + typeName + " is not available in the type registry.");
+											if (!type) throw new globalThis.Error("Unable to convert google.protobuf.Any with typeUrl '" + any.typeUrl + "' to JSON. The specified type " + typeName + " is not available in the type registry.");
 											let value = type.fromBinary(any.value, { readUnknownField: false });
 											let json = type.internalJsonWrite(value, opt);
-											if (typeName.startsWith("google.protobuf.") || !isJsonObject(json))
-												json = { value: json };
+											if (typeName.startsWith("google.protobuf.") || !isJsonObject(json)) json = { value: json };
 											json["@type"] = any.typeUrl;
 											return json;
 										}
 										internalJsonRead(json, options, target) {
-											if (!isJsonObject(json))
-												throw new globalThis.Error("Unable to parse google.protobuf.Any from JSON " + typeofJsonValue(json) + ".");
-											if (typeof json["@type"] != "string" || json["@type"] == "")
-												return this.create();
+											if (!isJsonObject(json)) throw new globalThis.Error("Unable to parse google.protobuf.Any from JSON " + typeofJsonValue(json) + ".");
+											if (typeof json["@type"] != "string" || json["@type"] == "") return this.create();
 											let typeName = this.typeUrlToName(json["@type"]);
 											let type = options?.typeRegistry?.find(t => t.typeName == typeName);
-											if (!type)
-												throw new globalThis.Error("Unable to parse google.protobuf.Any from JSON. The specified type " + typeName + " is not available in the type registry.");
+											if (!type) throw new globalThis.Error("Unable to parse google.protobuf.Any from JSON. The specified type " + typeName + " is not available in the type registry.");
 											let value;
-											if (typeName.startsWith("google.protobuf.") && json.hasOwnProperty("value"))
-												value = type.fromJson(json["value"], options);
+											if (typeName.startsWith("google.protobuf.") && json.hasOwnProperty("value")) value = type.fromJson(json["value"], options);
 											else {
 												let copy = Object.assign({}, json);
 												delete copy["@type"];
 												value = type.fromJson(copy, options);
 											}
-											if (target === undefined)
-												target = this.create();
+											if (target === undefined) target = this.create();
 											target.typeUrl = json["@type"];
 											target.value = type.toBinary(value);
 											return target;
 										}
 										typeNameToUrl(name) {
-											if (!name.length)
-												throw new Error("invalid type name: " + name);
+											if (!name.length) throw new Error("invalid type name: " + name);
 											return "type.googleapis.com/" + name;
 										}
 										typeUrlToName(url) {
-											if (!url.length)
-												throw new Error("invalid type url: " + url);
+											if (!url.length) throw new Error("invalid type url: " + url);
 											let slash = url.lastIndexOf("/");
 											let name = slash > 0 ? url.substring(slash + 1) : url;
-											if (!name.length)
-												throw new Error("invalid type url: " + url);
+											if (!name.length) throw new Error("invalid type url: " + url);
 											return name;
 										}
 									}
@@ -260,16 +234,16 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 											switch (PATHs?.[1]) {
 												case "View": // 播放页
 													break;
-											};
+											}
 											break;
-										case "bilibili.app.playerunite.v1.Player":
+										case "bilibili.app.playerunite.v1.Player": {
 											/******************  initialization start  *******************/
 											class Stream$Type extends MessageType {
 												constructor() {
 													super("bilibili.playershared.Stream", [
 														{ no: 1, name: "stream_info", kind: "message", T: () => StreamInfo },
 														{ no: 2, name: "dash_video", kind: "message", oneof: "content", T: () => DashVideo },
-														{ no: 3, name: "segment_video", kind: "message", oneof: "content", T: () => SegmentVideo }
+														{ no: 3, name: "segment_video", kind: "message", oneof: "content", T: () => SegmentVideo },
 													]);
 												}
 											}
@@ -293,7 +267,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 														{ no: 14, name: "vip_free", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
 														{ no: 15, name: "subtitle", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
 														//{ no: 16, name: "scheme", kind: "message", T: () => Scheme },
-														{ no: 17, name: "support_drm", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+														{ no: 17, name: "support_drm", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
 													]);
 												}
 											}
@@ -312,16 +286,14 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 														{ no: 9, name: "frame_rate", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
 														{ no: 10, name: "width", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
 														{ no: 11, name: "height", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-														{ no: 12, name: "widevine_pssh", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+														{ no: 12, name: "widevine_pssh", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
 													]);
 												}
 											}
 											const DashVideo = new DashVideo$Type();
 											class FragmentVideo$Type extends MessageType {
 												constructor() {
-													super("bilibili.playershared.FragmentVideo", [
-														{ no: 1, name: "videos", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => FragmentVideoInfo }
-													]);
+													super("bilibili.playershared.FragmentVideo", [{ no: 1, name: "videos", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => FragmentVideoInfo }]);
 												}
 											}
 											const FragmentVideo = new FragmentVideo$Type();
@@ -334,7 +306,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 														//{ no: 4, name: "dimension", kind: "message", T: () => Dimension },
 														{ no: 5, name: "timelength", kind: "scalar", T: 3 /*ScalarType.INT64*/, L: 2 /*LongType.NUMBER*/ },
 														//{ no: 6, name: "video_type", kind: "enum", T: () => ["bilibili.playershared.BizType", BizType, "BIZ_TYPE_"] },
-														{ no: 7, name: "playable_status", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+														{ no: 7, name: "playable_status", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
 													]);
 												}
 											}
@@ -347,16 +319,14 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 														{ no: 3, name: "size", kind: "scalar", T: 4 /*ScalarType.UINT64*/, L: 2 /*LongType.NUMBER*/ },
 														{ no: 4, name: "url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
 														{ no: 5, name: "backup_url", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ },
-														{ no: 6, name: "md5", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+														{ no: 6, name: "md5", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
 													]);
 												}
 											}
 											const ResponseUrl = new ResponseUrl$Type();
 											class SegmentVideo$Type extends MessageType {
 												constructor() {
-													super("bilibili.playershared.SegmentVideo", [
-														{ no: 1, name: "segment", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => ResponseUrl }
-													]);
+													super("bilibili.playershared.SegmentVideo", [{ no: 1, name: "segment", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => ResponseUrl }]);
 												}
 											}
 											const SegmentVideo = new SegmentVideo$Type();
@@ -379,7 +349,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 											const VodInfo = new VodInfo$Type();
 											/******************  initialization finish  *******************/
 											switch (PATHs?.[1]) {
-												case "PlayViewUnite": // 播放页
+												case "PlayViewUnite": {
+													// 播放页
 													/******************  initialization start  *******************/
 													class PlayViewUniteReply$Type extends MessageType {
 														constructor() {
@@ -393,16 +364,16 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 																//{ no: 7, name: "qn_trial_info", kind: "message", T: () => QnTrialInfo },
 																//{ no: 8, name: "history", kind: "message", T: () => History },
 																//{ no: 9, name: "view_info", kind: "message", T: () => ViewInfo },
-																{ no: 10, name: "fragment_video", kind: "message", T: () => FragmentVideo }
+																{ no: 10, name: "fragment_video", kind: "message", T: () => FragmentVideo },
 															]);
 														}
 													}
 													const PlayViewUniteReply = new PlayViewUniteReply$Type();
 													/******************  initialization finish  *******************/
 													let data = PlayViewUniteReply.fromBinary(body);
-													$.log(`🚧 data: ${JSON.stringify(data)}`, "");
+													log(`🚧 data: ${JSON.stringify(data)}`, "");
 													let UF = UnknownFieldHandler.list(data);
-													//$.log(`🚧 UF: ${JSON.stringify(UF)}`, "");
+													//log(`🚧 UF: ${JSON.stringify(UF)}`, "");
 													if (UF) {
 														UF = UF.map(uf => {
 															//uf.no; // 22
@@ -410,9 +381,9 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 															// use the binary reader to decode the raw data:
 															let reader = new BinaryReader(uf.data);
 															let addedNumber = reader.int32(); // 7777
-															$.log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, addedNumber: ${addedNumber}`, "");
+															log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, addedNumber: ${addedNumber}`, "");
 														});
-													};
+													}
 													data.vodInfo.streamList = data.vodInfo.streamList.map(stream => {
 														switch (stream?.content?.oneofKind) {
 															case "dashVideo":
@@ -424,14 +395,16 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 																	return segment;
 																});
 																break;
-														};
+														}
 														return stream;
 													});
-													$.log(`🚧 data: ${JSON.stringify(data)}`, "");
+													log(`🚧 data: ${JSON.stringify(data)}`, "");
 													body = PlayViewUniteReply.toBinary(data);
 													break;
-											};
+												}
+											}
 											break;
+										}
 										case "bilibili.app.playurl.v1.PlayURL": // 普通视频
 											/******************  initialization start  *******************/
 											/******************  initialization finish  *******************/
@@ -440,7 +413,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 													break;
 												case "PlayConf": // 播放配置
 													break;
-											};
+											}
 											break;
 										case "bilibili.pgc.gateway.player.v2.PlayURL": // 番剧
 											/******************  initialization start  *******************/
@@ -453,50 +426,54 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 													break;
 												case "PlayConf": // 播放配置
 													break;
-											};
+											}
 											break;
 										case "bilibili.app.nativeact.v1.NativeAct": // 活动-节目、动画、韩综（港澳台）
 											switch (PATHs?.[1]) {
 												case "Index": // 首页
 													break;
-											};
+											}
 											break;
 										case "bilibili.app.interface.v1.Search": // 搜索框
 											switch (PATHs?.[1]) {
 												case "Suggest3": // 搜索建议
 													break;
-											};
+											}
 											break;
 										case "bilibili.polymer.app.search.v1.Search": // 搜索结果
 											/******************  initialization start  *******************/
 											/******************  initialization finish  *******************/
 											switch (PATHs?.[1]) {
-												case "SearchAll": { // 全部结果（综合）
+												case "SearchAll": {
+													// 全部结果（综合）
 													/******************  initialization start  *******************/
 													/******************  initialization finish  *******************/
 													break;
-												};
-												case "SearchByType": { // 分类结果（番剧、用户、影视、专栏）
+												}
+												case "SearchByType": {
+													// 分类结果（番剧、用户、影视、专栏）
 													break;
-												};
-											};
+												}
+											}
 											break;
-									};
+									}
 									break;
-							};
-							// protobuf部分处理完后，重新计算并添加B站gRPC校验头
-							rawBody = addgRPCHeader({ header, body }); // gzip压缩有问题，别用
+								}
+							}
+							rawBody = gRPC.encode(rawBody);
 							break;
-					};
+					}
 					// 写入二进制数据
 					$response.body = rawBody;
 					break;
-			};
-			$.log(`🚧 ${$.name}，信息组, infoGroup: ${JSON.stringify(infoGroup)}`, "");
+				}
+			}
+			log(`🚧 信息组, infoGroup: ${JSON.stringify(infoGroup)}`, "");
 			break;
+		}
 		case false:
 			break;
-	};
+	}
 })()
-	.catch((e) => $.logErr(e))
-	.finally(() => $.done($response))
+	.catch(e => logError(e))
+	.finally(() => done($response));

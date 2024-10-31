@@ -1,0 +1,30 @@
+name: Deploy
+on:
+  push:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      - dev
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  dev:
+    uses: ./.github/workflows/dev.yml
+    secrets: inherit
+  deploy:
+    needs: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@master
+        with:
+          name: artifact
+      - name: Deploy Request
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 0c193c4ff4b930d765b1ca4b406ec1b9
+          gist_description: "📺 BiliBili: 🔀 Redirect β"
+          file_path: dist/request.bundle.js
