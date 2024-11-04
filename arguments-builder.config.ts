@@ -4,6 +4,10 @@ export default defineConfig({
 	output: {
 		surge: {
 			path: "./dist/BiliBili.Redirect.sgmodule",
+			transformEgern: {
+				enable: true,
+				path: "./dist/BiliBili.Redirect.yaml",
+			},
 		},
 		loon: {
 			path: "./dist/BiliBili.Redirect.plugin",
@@ -12,10 +16,6 @@ export default defineConfig({
 			{
 				path: "./dist/BiliBili.Redirect.stoverride",
 				template: "./template/stash.handlebars",
-			},
-			{
-				path: "./dist/BiliBili.Redirect.yaml",
-				template: "./template/egern.handlebars",
 			},
 		],
 		dts: {
@@ -28,14 +28,6 @@ export default defineConfig({
 		},
 	},
 	args: [
-		{
-			key: "Switch",
-			name: "总功能开关",
-			defaultValue: true,
-			type: "boolean",
-			description: "是否启用此APP修改",
-			exclude: ["surge", "loon"],
-		},
 		{
 			key: "Host.Akamaized",
 			name: "[主机名] 重定向 Akamaized CDN (港澳台)",

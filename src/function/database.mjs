@@ -1,12 +1,6 @@
 export default {
-	Default: {
-		Settings: {
-			Switch: true,
-		},
-	},
 	Redirect: {
 		Settings: {
-			Switch: true,
 			Host: {
 				Akamaized: "upos-sz-mirrorali.bilivideo.com",
 				BStar: "upos-sz-mirrorali.bilivideo.com",

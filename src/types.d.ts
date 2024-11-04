@@ -1,12 +1,4 @@
 export interface Settings {
-    /**
-     * 总功能开关
-     *
-     * 是否启用此APP修改
-     *
-     * @defaultValue true
-     */
-    Switch?: boolean;
     Host?: {
     /**
          * [主机名] 重定向 Akamaized CDN (港澳台)
