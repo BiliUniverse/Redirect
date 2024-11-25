@@ -1,4 +1,5 @@
-import { $platform, Lodash as _, Storage, fetch, notification, log, logError, wait, done, gRPC } from "@nsnanocat/util";
+import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
+import { URL } from "@nsnanocat/url";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
 // 构造回复数据
@@ -74,7 +75,7 @@ const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["conten
 				case "application/vnd.apple.flatbuffer":
 				case "application/octet-stream": {
 					//log(`🚧 $request.body: ${JSON.stringify($request.body)}`, "");
-					let rawBody = $platform === "Quantumult X" ? new Uint8Array($request.bodyBytes ?? []) : ($request.body ?? new Uint8Array());
+					let rawBody = $app === "Quantumult X" ? new Uint8Array($request.bodyBytes ?? []) : ($request.body ?? new Uint8Array());
 					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					switch (FORMAT) {
 						case "application/protobuf":
@@ -83,8 +84,6 @@ const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["conten
 							break;
 						case "application/grpc":
 						case "application/grpc+proto":
-							rawBody = gRPC.decode(rawBody);
-							rawBody = gRPC.encode(rawBody);
 							break;
 					}
 					// 写入二进制数据
@@ -180,7 +179,7 @@ const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["conten
 				//log("🚧 finally", `echo $response: ${JSON.stringify($response, null, 2)}`, "");
 				if ($response.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				switch ($platform) {
+				switch ($app) {
 					default:
 						done({ response: $response });
 						break;
