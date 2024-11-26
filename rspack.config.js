@@ -34,5 +34,6 @@ export default defineConfig({
 			banner: pkg.homepage,
 		}),
 	],
+	devtool: false,
 	performance: false,
 });
