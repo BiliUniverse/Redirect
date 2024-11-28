@@ -1,4 +1,4 @@
-import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done, gRPC } from "@nsnanocat/util";
+import { $app, Lodash as _, Storage, Console, fetch, notification, wait, done, gRPC } from "@nsnanocat/util";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "@protobuf-ts/runtime/build/es2015/index.js";
@@ -6,15 +6,15 @@ import { Any } from "./protobuf/google/protobuf/any.js";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-log(`⚠ url: ${url.toJSON()}`, "");
+Console.debug(`url: ${url.toJSON()}`, "");
 // 获取连接参数
 const HOST = url.hostname,
 	PATH = url.pathname,
 	PATHs = url.pathname.split("/").filter(Boolean);
-log(`⚠ HOST: ${HOST}, PATH: ${PATH}`, "");
+Console.debug(`HOST: ${HOST}, PATH: ${PATH}`, "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-log(`⚠ FORMAT: ${FORMAT}`, "");
+Console.debug(`FORMAT: ${FORMAT}`, "");
 !(async () => {
 	/**
 	 * 设置
@@ -48,7 +48,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "application/vnd.apple.mpegurl":
 		case "audio/mpegurl":
 			//body = M3U8.parse($response.body);
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`, "");
 			//$response.body = M3U8.stringify(body);
 			break;
 		case "text/xml":
@@ -58,13 +58,13 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "application/plist":
 		case "application/x-plist":
 			//body = XML.parse($response.body);
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`, "");
 			//$response.body = XML.stringify(body);
 			break;
 		case "text/vtt":
 		case "application/vtt":
 			//body = VTT.parse($response.body);
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`, "");
 			//$response.body = VTT.stringify(body);
 			break;
 		case "text/json":
@@ -119,9 +119,9 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "application/grpc+proto":
 		case "application/vnd.apple.flatbuffer":
 		case "application/octet-stream": {
-			//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
+			//Console.debug(`$response.body: ${JSON.stringify($response.body)}`, "");
 			let rawBody = $app === "Quantumult X" ? new Uint8Array($response.bodyBytes ?? []) : ($response.body ?? new Uint8Array());
-			//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+			//Console.debug(`isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 			switch (FORMAT) {
 				case "application/protobuf":
 				case "application/x-protobuf":
@@ -280,9 +280,9 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 											const PlayViewUniteReply = new PlayViewUniteReply$Type();
 											/******************  initialization finish  *******************/
 											let data = PlayViewUniteReply.fromBinary(body);
-											log(`🚧 data: ${JSON.stringify(data)}`, "");
+											Console.debug(`data: ${JSON.stringify(data)}`, "");
 											let UF = UnknownFieldHandler.list(data);
-											//log(`🚧 UF: ${JSON.stringify(UF)}`, "");
+											//Console.debug(`UF: ${JSON.stringify(UF)}`, "");
 											if (UF) {
 												UF = UF.map(uf => {
 													//uf.no; // 22
@@ -290,7 +290,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 													// use the binary reader to decode the raw data:
 													let reader = new BinaryReader(uf.data);
 													let addedNumber = reader.int32(); // 7777
-													log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, addedNumber: ${addedNumber}`, "");
+													Console.debug(`no: ${uf.no}, wireType: ${uf.wireType}, addedNumber: ${addedNumber}`, "");
 												});
 											}
 											data.vodInfo.streamList = data.vodInfo.streamList.map(stream => {
@@ -307,7 +307,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 												}
 												return stream;
 											});
-											log(`🚧 data: ${JSON.stringify(data)}`, "");
+											Console.debug(`data: ${JSON.stringify(data)}`, "");
 											body = PlayViewUniteReply.toBinary(data);
 											break;
 										}
@@ -376,7 +376,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 			break;
 		}
 	}
-	log(`🚧 信息组, infoGroup: ${JSON.stringify(infoGroup)}`, "");
+	Console.debug(`信息组, infoGroup: ${JSON.stringify(infoGroup)}`, "");
 })()
-	.catch(e => logError(e))
+	.catch(e => Console.error(e))
 	.finally(() => done($response));

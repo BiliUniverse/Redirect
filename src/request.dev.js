@@ -1,4 +1,4 @@
-import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done, gRPC } from "@nsnanocat/util";
+import { $app, Lodash as _, Storage, Console, fetch, notification, wait, done, gRPC } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
@@ -7,13 +7,13 @@ let $response = undefined;
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-log(`⚠ url: ${url.toJSON()}`, "");
+Console.debug(`url: ${url.toJSON()}`);
 // 获取连接参数
 const PATHs = url.pathname.split("/").filter(Boolean);
-log(`⚠ PATHs: ${PATHs}`, "");
+Console.debug(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
-log(`⚠ FORMAT: ${FORMAT}`, "");
+Console.debug(`FORMAT: ${FORMAT}`);
 !(async () => {
 	/**
 	 * 设置
@@ -42,7 +42,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
 					//body = M3U8.parse($request.body);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					//$request.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
@@ -52,19 +52,19 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist":
 					//body = XML.parse($request.body);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					//$request.body = XML.stringify(body);
 					break;
 				case "text/vtt":
 				case "application/vtt":
 					//body = VTT.parse($request.body);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					//$request.body = VTT.stringify(body);
 					break;
 				case "text/json":
 				case "application/json":
 					//body = JSON.parse($request.body ?? "{}");
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					//$request.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
@@ -74,9 +74,9 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/grpc+proto":
 				case "application/vnd.apple.flatbuffer":
 				case "application/octet-stream": {
-					//log(`🚧 $request.body: ${JSON.stringify($request.body)}`, "");
+					//Console.debug(`$request.body: ${JSON.stringify($request.body)}`);
 					let rawBody = $app === "Quantumult X" ? new Uint8Array($request.bodyBytes ?? []) : ($request.body ?? new Uint8Array());
-					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+					//Console.debug(`isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`);
 					switch (FORMAT) {
 						case "application/protobuf":
 						case "application/x-protobuf":
@@ -172,13 +172,13 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 	}
 	if ($request.headers?.Host) $request.headers.Host = url.hostname;
 	$request.url = url.toString();
-	log("🚧 调试信息", `$request.url: ${$request.url}`, "");
+	Console.debug(`$request.url: ${$request.url}`);
 })()
-	.catch(e => logError(e))
+	.catch(e => Console.error(e))
 	.finally(() => {
 		switch (typeof $response) {
 			case "object": // 有构造回复数据，返回构造的回复数据
-				//log("🚧 finally", `echo $response: ${JSON.stringify($response, null, 2)}`, "");
+				//Console.debug("🚧 finally", `echo $response: ${JSON.stringify($response, null, 2)}`);
 				if ($response.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				switch ($app) {
@@ -195,11 +195,11 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				}
 				break;
 			case "undefined": // 无构造回复数据，发送修改的请求数据
-				//log("🚧 finally", `$request: ${JSON.stringify($request, null, 2)}`, "");
+				//Console.debug("🚧 finally", `$request: ${JSON.stringify($request, null, 2)}`);
 				done($request);
 				break;
 			default:
-				logError(`不合法的 $response 类型: ${typeof $response}`, "");
+				Console.error(`不合法的 $response 类型: ${typeof $response}`);
 				break;
 		}
 	});

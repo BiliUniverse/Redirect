@@ -1,4 +1,4 @@
-import { Lodash as _, getStorage, log } from "@nsnanocat/util";
+import { Lodash as _, getStorage, Console } from "@nsnanocat/util";
 
 /**
  * Set Environment Variables
@@ -9,12 +9,13 @@ import { Lodash as _, getStorage, log } from "@nsnanocat/util";
  * @return {Object} { Settings, Caches, Configs }
  */
 export default function setENV(name, platforms, database) {
-	log("☑️ Set Environment Variables", "");
+	Console.info("☑️ Set Environment Variables");
 	const { Settings, Caches, Configs } = getStorage(name, platforms, database);
 	/***************** Settings *****************/
-	log(`✅ Set Environment Variables, Settings: ${typeof Settings}, Settings内容: ${JSON.stringify(Settings)}`, "");
+	Console.debug(`Settings: ${typeof Settings}, Settings内容: ${JSON.stringify(Settings)}`);
 	/***************** Caches *****************/
-	//log(`✅ Set Environment Variables, Caches: ${typeof Caches}, Caches内容: ${JSON.stringify(Caches)}`, "");
+	//Console.debug(`Caches: ${typeof Caches}, Caches内容: ${JSON.stringify(Caches)}`);
 	/***************** Configs *****************/
+	Console.info("✅ Set Environment Variables");
 	return { Settings, Caches, Configs };
 };
