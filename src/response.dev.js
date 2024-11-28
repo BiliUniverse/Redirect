@@ -6,15 +6,13 @@ import { Any } from "./protobuf/google/protobuf/any.js";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-Console.debug(`url: ${url.toJSON()}`, "");
+Console.info(`url: ${url.toJSON()}`, "");
 // 获取连接参数
-const HOST = url.hostname,
-	PATH = url.pathname,
-	PATHs = url.pathname.split("/").filter(Boolean);
-Console.debug(`HOST: ${HOST}, PATH: ${PATH}`, "");
+const PATHs = url.pathname.split("/").filter(Boolean);
+Console.info(`PATHs: ${PATHs}`, "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-Console.debug(`FORMAT: ${FORMAT}`, "");
+Console.info(`FORMAT: ${FORMAT}`, "");
 !(async () => {
 	/**
 	 * 设置
@@ -79,7 +77,7 @@ Console.debug(`FORMAT: ${FORMAT}`, "");
 					break;
 				case "api.bilibili.com":
 				case "api.biliapi.net":
-					switch (PATH) {
+					switch (url.pathname) {
 						case "/pgc/player/api/playurl": // 番剧-播放地址-api
 						case "/pgc/player/web/playurl": // 番剧-播放地址-web
 						case "/pgc/player/web/playurl/html5": // 番剧-播放地址-web-HTML5

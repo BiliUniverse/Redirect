@@ -7,13 +7,13 @@ let $response = undefined;
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-Console.debug(`url: ${url.toJSON()}`);
+Console.info(`url: ${url.toJSON()}`);
 // 获取连接参数
 const PATHs = url.pathname.split("/").filter(Boolean);
-Console.debug(`PATHs: ${PATHs}`);
+Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
-Console.debug(`FORMAT: ${FORMAT}`);
+Console.info(`FORMAT: ${FORMAT}`);
 !(async () => {
 	/**
 	 * 设置

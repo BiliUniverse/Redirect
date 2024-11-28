@@ -9,13 +9,13 @@ import { Lodash as _, getStorage, Console } from "@nsnanocat/util";
  * @return {Object} { Settings, Caches, Configs }
  */
 export default function setENV(name, platforms, database) {
-	Console.info("☑️ Set Environment Variables");
+	Console.log("☑️ Set Environment Variables");
 	const { Settings, Caches, Configs } = getStorage(name, platforms, database);
 	/***************** Settings *****************/
-	Console.debug(`Settings: ${typeof Settings}, Settings内容: ${JSON.stringify(Settings)}`);
+	Console.debug(`typeof Settings: ${typeof Settings}`, `Settings: ${JSON.stringify(Settings)}`);
 	/***************** Caches *****************/
-	//Console.debug(`Caches: ${typeof Caches}, Caches内容: ${JSON.stringify(Caches)}`);
+	//Console.debug(`typeof Caches: ${typeof Caches}`, `Caches: ${JSON.stringify(Caches)}`);
 	/***************** Configs *****************/
-	Console.info("✅ Set Environment Variables");
+	Console.log("✅ Set Environment Variables");
 	return { Settings, Caches, Configs };
 };

@@ -4,17 +4,17 @@ import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
 // 构造回复数据
 let $response = undefined;
-Console.debug = (...msg) => { };
+Console.debug = () => {};
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-Console.debug(`url: ${url.toJSON()}`);
+Console.info(`url: ${url.toJSON()}`);
 // 获取连接参数
 const PATHs = url.pathname.split("/").filter(Boolean);
-Console.debug(`PATHs: ${PATHs}`);
+Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
-Console.debug(`FORMAT: ${FORMAT}`);
+Console.info(`FORMAT: ${FORMAT}`);
 !(async () => {
 	/**
 	 * 设置
@@ -173,8 +173,8 @@ Console.debug(`FORMAT: ${FORMAT}`);
 	$request.url = url.toString();
 	Console.debug(`$request.url: ${$request.url}`);
 })()
-.catch(e => Console.error(e))
-.finally(() => {
+	.catch(e => Console.error(e))
+	.finally(() => {
 		switch (typeof $response) {
 			case "object": // 有构造回复数据，返回构造的回复数据
 				//Console.debug("🚧 finally", `echo $response: ${JSON.stringify($response, null, 2)}`);
