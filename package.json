@@ -1,6 +1,5 @@
 {
 	"name": "@biliuniverse/redirect",
-	"version": "0.2.9",
 	"organizationName": "🪐 BiliUniverse",
 	"displayName": "📺 BiliBili: 🔀 Redirect",
 	"description": "哔哩哔哩：重定向\n中国站CDN自定义",
@@ -46,6 +45,6 @@
 	},
 	"dependencies": {
 		"@nsnanocat/url": "^1.2.3",
-		"@nsnanocat/util": "^1.6.1"
+		"@nsnanocat/util": "^1.6.3"
 	}
 }
