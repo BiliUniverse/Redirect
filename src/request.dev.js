@@ -1,9 +1,11 @@
-import { $app, Lodash as _, Storage, Console, fetch, notification, wait, done, gRPC } from "@nsnanocat/util";
+import { $app, Console, done, gRPC, Lodash as _ } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
 // 构造回复数据
+// biome-ignore lint/style/useConst: <explanation>
 let $response = undefined;
+Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);

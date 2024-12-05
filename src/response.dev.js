@@ -1,8 +1,9 @@
-import { $app, Lodash as _, Storage, Console, fetch, notification, wait, done, gRPC } from "@nsnanocat/util";
+import { $app, Console, done, gRPC, Lodash as _ } from "@nsnanocat/util";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "@protobuf-ts/runtime/build/es2015/index.js";
 import { Any } from "./protobuf/google/protobuf/any.js";
+Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
