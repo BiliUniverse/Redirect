@@ -5,7 +5,6 @@ import setENV from "./function/setENV.mjs";
 // 构造回复数据
 // biome-ignore lint/style/useConst: <explanation>
 let $response = undefined;
-Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
@@ -16,12 +15,13 @@ Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
 Console.info(`FORMAT: ${FORMAT}`);
-!(async () => {
+(async () => {
 	/**
 	 * 设置
 	 * @type {{Settings: import('./types').Settings}}
 	 */
 	const { Settings, Caches, Configs } = setENV("BiliBili", "Redirect", database);
+	Console.logLevel = Settings.LogLevel;
 	// 创建空数据
 	const body = {};
 	// 方法判断
@@ -180,7 +180,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 	.finally(() => {
 		switch (typeof $response) {
 			case "object": // 有构造回复数据，返回构造的回复数据
-				//Console.debug("🚧 finally", `echo $response: ${JSON.stringify($response, null, 2)}`);
+				//Console.debug("finally", `echo $response: ${JSON.stringify($response, null, 2)}`);
 				if ($response.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				switch ($app) {
@@ -197,11 +197,12 @@ Console.info(`FORMAT: ${FORMAT}`);
 				}
 				break;
 			case "undefined": // 无构造回复数据，发送修改的请求数据
-				//Console.debug("🚧 finally", `$request: ${JSON.stringify($request, null, 2)}`);
+				//Console.debug("finally", `$request: ${JSON.stringify($request, null, 2)}`);
 				done($request);
 				break;
 			default:
 				Console.error(`不合法的 $response 类型: ${typeof $response}`);
+				done();
 				break;
 		}
 	});
