@@ -150,6 +150,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 						case "8000": // MCDN
 						case "8082": // MCDN
 						case "9102": // MCDN
+							if (url.searchParams.has("originalUrl")) break; // 跳过 MCDN 重定向
 							url.protocol = "https";
 							url.hostname = Settings.Host.MCDN;
 							url.port = "";
