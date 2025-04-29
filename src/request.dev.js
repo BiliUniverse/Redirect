@@ -129,6 +129,14 @@ Console.info(`FORMAT: ${FORMAT}`);
 					break;
 				default:
 					switch (url.port) {
+						case "": {
+							// MCDN.v1.resource
+							// 不可修改
+							//url.protocol = "http";
+							//url.hostname = Settings.Host.CDN;
+							//url.port = "";
+							break;
+						}
 						case "486": {
 							// MCDN
 							const cdn = url.searchParams.get("cdn");
@@ -147,10 +155,15 @@ Console.info(`FORMAT: ${FORMAT}`);
 							url.hostname = url.searchParams.get("xy_usource") || Settings.Host.PCDN;
 							url.port = "";
 							break;
-						case "4483": // MCDN
-						case "8000": // MCDN
-						case "8082": // MCDN
-						case "9102": // MCDN
+						case "8000": // MCDN.v1.resource
+						case "8082": // MCDN.v1.resource
+							// 不可修改
+							//url.protocol = "http";
+							//url.hostname = Settings.Host.CDN;
+							//url.port = "";
+							break;
+						case "4483": // MCDN.upgcxcode
+						case "9102": // MCDN.upgcxcode
 							if (url.searchParams.has("originalUrl")) break; // 跳过 MCDN 重定向
 							url.protocol = "http";
 							url.hostname = Settings.Host.MCDN;
