@@ -129,6 +129,32 @@ Console.info(`FORMAT: ${FORMAT}`);
 				default:
 					switch (url.port) {
 						case "": {
+							switch (true) {
+								case url.hostname.endsWith(".mcdn.bilivideo.cn"):
+									switch (true) {
+										case url.pathname.startsWith("/v1/resource/"):
+											switch (url.protocol) {
+												case "http:":
+													url.port = "8000";
+													break;
+												case "https:":
+													url.port = "8082";
+													break;
+											}
+											break;
+										case url.pathname.startsWith("/upgcxcode/"):
+											switch (url.protocol) {
+												case "http:":
+													url.port = "9102";
+													break;
+												case "https:":
+													url.port = "4483";
+													break;
+											}
+											break;
+									}
+									break;
+							}
 							break;
 						}
 						case "486": {
@@ -145,7 +171,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 							break;
 						}
 						case "4480": // PCDN
-							url.protocol = "http";
+							url.protocol = "http:";
 							url.hostname = url.searchParams.get("xy_usource") || Settings.Host.PCDN;
 							url.port = "";
 							break;
@@ -155,7 +181,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 							case "4483": // MCDN.upgcxcode
 							case "9102": // MCDN.upgcxcode
 							if (url.searchParams.has("originalUrl")) break; // 跳过 MCDN 重定向
-							url.protocol = "http";
+							url.protocol = "http:";
 							url.hostname = Settings.Host.MCDN;
 							url.port = "";
 							url.pathname = "";
@@ -163,7 +189,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 							url.searchParams.set("url", $request.url);
 							break;
 						case "9305": // PCDN
-							url.protocol = "http";
+							url.protocol = "http:";
 							url.hostname = url.PATHs.shift();
 							url.port = "";
 							url.pathname = url.PATHs.join("/");
@@ -176,7 +202,8 @@ Console.info(`FORMAT: ${FORMAT}`);
 		case "TRACE":
 			break;
 	}
-	if ($request.headers?.Host) $request.headers.Host = url.hostname;
+	if ($request.headers?.Host) $request.headers.Host = url.host;
+	if ($request.headers?.[":authority"]) $request.headers[":authority"] = url.host;
 	$request.url = url.toString();
 	Console.debug(`$request.url: ${$request.url}`);
 })()
