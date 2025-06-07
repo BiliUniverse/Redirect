@@ -19,7 +19,7 @@ force-http-engine-hosts = *:4480, *:4483, *:8000, *:8082, *:9102
 [Script]
 http-request ^https?:\/\/.+\.bilivideo\.com\/upgcxcode\/ script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, tag=📺 BiliBili.Redirect.CDN.upgcxcode.m4s, argument={{{scriptParams}}}
 http-request ^https?:\/\/[adbcefxy0-9]+\.mcdn\.bilivideo\.cn(:(8000|8082))?\/v1\/resource\/ script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, tag=📺 BiliBili.Redirect.MCDN.v1.resource.m4s, argument={{{scriptParams}}}
-http-request ^https?:\/\/[adbcefxy0-9]+\.mcdn\.bilivideo\.cn:(4483|9102)\/upgcxcode\/ script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, tag=📺 BiliBili.Redirect.MCDN.upgcxcode.m4s, argument={{{scriptParams}}}
+http-request ^https?:\/\/[adbcefxy0-9]+\.mcdn\.bilivideo\.cn(:(4483|9102))?\/upgcxcode\/ script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, tag=📺 BiliBili.Redirect.MCDN.upgcxcode.m4s, argument={{{scriptParams}}}
 http-request ^https?:\/\/(.+):4480\/upgcxcode\/ script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, tag=📺 BiliBili.Redirect.PCDN.upgcxcode.m4s, argument={{{scriptParams}}}
 http-request ^https?:\/\/upos-(hz|bstar1)-mirrorakam\.akamaized\.net/upgcxcode\/ script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, tag=📺 BiliBili.Redirect.Akamaized.upgcxcode.m4s, argument={{{scriptParams}}}
 

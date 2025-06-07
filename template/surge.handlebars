@@ -18,7 +18,7 @@ force-http-engine-hosts = %APPEND% *:4480, *:4483, *:8000, *:8082, *:9102
 [Script]
 📺 BiliBili.Redirect.CDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/.+\.bilivideo\.com\/upgcxcode\/, script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
 📺 BiliBili.Redirect.MCDN.v1.resource.m4s = type=http-request, pattern=^https?:\/\/[adbcefxy0-9]+\.mcdn\.bilivideo\.cn(:(8000|8082))?\/v1\/resource\/, script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
-📺 BiliBili.Redirect.MCDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/[adbcefxy0-9]+\.mcdn\.bilivideo\.cn:(4483|9102)\/upgcxcode\/, script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
+📺 BiliBili.Redirect.MCDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/[adbcefxy0-9]+\.mcdn\.bilivideo\.cn(:(4483|9102))?\/upgcxcode\/, script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
 📺 BiliBili.Redirect.PCDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/(.+):4480\/upgcxcode\/, script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
 📺 BiliBili.Redirect.Akamaized.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/upos-(hz|bstar1)-mirrorakam\.akamaized\.net/upgcxcode\/, script-path=https://github.com/BiliUniverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
 
