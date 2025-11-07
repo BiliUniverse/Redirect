@@ -1,3 +1,6 @@
+### 🛠️ Bug Fixes
+  * 补充阿里云 CDN 主机名
+
 ### 🔣 Dependencies
   * 升级了 `@nsnanocat/url`
   * 升级了 `@nsnanocat/util`

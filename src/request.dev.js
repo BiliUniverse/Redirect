@@ -103,6 +103,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 			// 主机判断
 			switch (url.hostname) {
 				case "upos-sz-mirrorali.bilivideo.com": // 阿里云 CDN
+				case "upos-sz-mirrorali02.bilivideo.com": // 阿里云 CDN
 				case "upos-sz-mirroralib.bilivideo.com": // 阿里云 CDN
 				case "upos-sz-mirroralio1.bilivideo.com": // 阿里云 CDN
 				case "upos-sz-mirrorcos.bilivideo.com": // 腾讯云 CDN
