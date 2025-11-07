@@ -44,6 +44,7 @@
 		"node-polyfill-webpack-plugin": "^4.1.0"
 	},
 	"dependencies": {
+		"@nsnanocat/grpc": "^1.0.0",
 		"@nsnanocat/url": "^1.2.5",
 		"@nsnanocat/util": "^1.8.10"
 	}
