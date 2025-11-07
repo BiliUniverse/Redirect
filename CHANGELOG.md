@@ -1,6 +1,6 @@
-### 🛠️ Bug Fixes
-  * 修复`MCDN 重定向`功能错误覆盖`缓存与下载资源`的问题
-    * `缓存与下载资源`无法重定向，所以已被排除在脚本作用范围外
-  * `MCDN 重定向`功能现在会跳过带有 `originalUrl` 参数的`静态资源`请求
-  * 修复 `MCDN 重定向` 脚本作用范围，现在可以正确覆盖 IPv6 地址的 MCDN 连接了
-  * 修复 BiliBili MCDN 请求头不规范，导致端口号解析错误的问题
+### 🆕 New Features
+  * `重定向 Akamaized CDN (港澳台)` 改为 `重定向 OverseaVideo CDN (港澳台)`。
+    * 此选项新增重定向以下主机名：
+      * `upos-sz-mirroraliov.bilivideo.com` (阿里云 CDN，海外)
+      * `upos-sz-mirrorcosov.bilivideo.com` (腾讯云 CDN，海外)
+      * `upos-sz-mirrorhwov.bilivideo.com` (华为云 CDN，海外)

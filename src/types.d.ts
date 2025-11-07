@@ -1,9 +1,9 @@
 export interface Settings {
     Host?: {
     /**
-         * [主机名] 重定向 Akamaized CDN (港澳台)
+         * [主机名] 重定向 OverseaVideo CDN (港澳台)
          *
-         * 请选择 Akamaized 要重定向的主机名。
+         * 请选择 OverseaVideo 要重定向的主机名。
          *
          * @remarks
          *
@@ -17,7 +17,7 @@ export interface Settings {
          *
          * @defaultValue "upos-sz-mirrorali.bilivideo.com"
          */
-        Akamaized?: 'upos-sz-mirrorali.bilivideo.com' | 'upos-sz-mirrorcos.bilivideo.com' | 'upos-sz-mirrorhw.bilivideo.com' | 'upos-sz-mirroraliov.bilivideo.com' | 'upos-sz-mirrorcosov.bilivideo.com' | 'upos-sz-mirrorhwov.bilivideo.com';
+        OverseaVideo?: 'upos-sz-mirrorali.bilivideo.com' | 'upos-sz-mirrorcos.bilivideo.com' | 'upos-sz-mirrorhw.bilivideo.com' | 'upos-sz-mirroraliov.bilivideo.com' | 'upos-sz-mirrorcosov.bilivideo.com' | 'upos-sz-mirrorhwov.bilivideo.com';
     /**
          * [主机名] 重定向 BStar CDN (国际版)
          *

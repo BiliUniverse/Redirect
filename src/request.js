@@ -113,12 +113,12 @@ Console.info(`FORMAT: ${FORMAT}`);
 				case "upos-sz-mirror08c.bilivideo.com": // 华为云 CDN，融合 CDN
 				case "upos-sz-mirror08h.bilivideo.com": // 华为云 CDN，融合 CDN
 				case "upos-sz-mirror08ct.bilivideo.com": // 华为云 CDN，融合 CDN
+				break;
+				case "upos-hz-mirrorakam.akamaized.net": // Akamai CDN，海外，有参数校验，其他类型的 CDN 不能直接替换为此 Host。但反过来可以。
 				case "upos-sz-mirroraliov.bilivideo.com": // 阿里云 CDN，海外
 				case "upos-sz-mirrorcosov.bilivideo.com": // 腾讯云 CDN，海外
 				case "upos-sz-mirrorhwov.bilivideo.com": // 华为云 CDN，海外
-					break;
-				case "upos-hz-mirrorakam.akamaized.net": // Akamai CDN，海外，有参数校验，其他类型的 CDN 不能直接替换为此 Host。但反过来可以。
-					url.hostname = Settings.Host.Akamaized;
+					url.hostname = Settings.Host.OverseaVideo;
 					break;
 				case "upos-sz-mirroralibstar1.bilivideo.com": // 阿里云 CDN，海外（东南亚），其他类型的 CDN 应该不能替换为此 Host，但反过来可以。
 				case "upos-sz-mirrorcosbstar1.bilivideo.com": // 腾讯云 CDN，海外（东南亚），其他类型的 CDN 应该不能替换为此 Host，但反过来可以。

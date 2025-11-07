@@ -29,12 +29,12 @@ export default defineConfig({
 	},
 	args: [
 		{
-			key: "Host.Akamaized",
-			name: "[主机名] 重定向 Akamaized CDN (港澳台)",
+			key: "Host.OverseaVideo",
+			name: "[主机名] 重定向 OverseaVideo CDN (港澳台)",
 			defaultValue: "upos-sz-mirrorali.bilivideo.com",
 			type: "string",
 			boxJsType: "selects",
-			description: "请选择 Akamaized 要重定向的主机名。",
+			description: "请选择 OverseaVideo 要重定向的主机名。",
 			options: [
 				{
 					"key": "upos-sz-mirrorali.bilivideo.com",
