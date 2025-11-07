@@ -116,6 +116,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 				case "upos-sz-mirror08ct.bilivideo.com": // 华为云 CDN，融合 CDN
 				break;
 				case "upos-hz-mirrorakam.akamaized.net": // Akamai CDN，海外，有参数校验，其他类型的 CDN 不能直接替换为此 Host。但反过来可以。
+				case "upos-sz-mirrorawsov.bilivideo.com": // AWS CDN，海外
 				case "upos-sz-mirroraliov.bilivideo.com": // 阿里云 CDN，海外
 				case "upos-sz-mirrorcosov.bilivideo.com": // 腾讯云 CDN，海外
 				case "upos-sz-mirrorhwov.bilivideo.com": // 华为云 CDN，海外
