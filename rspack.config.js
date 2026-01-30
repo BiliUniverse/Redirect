@@ -8,7 +8,15 @@ export default defineConfig({
 		"request": "./src/request.js",
 	},
 	output: {
+		chunkFormat: false,
 		filename: "[name].bundle.js",
+		library: {
+			type: "module",
+		},
+	},
+	optimization: {
+		minimize: true,
+		usedExports: true,
 	},
 	plugins: [
 		new NodePolyfillPlugin({
