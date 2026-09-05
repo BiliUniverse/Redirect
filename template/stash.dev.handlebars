@@ -23,6 +23,7 @@ http:
     - "*:8000"
     - "*:9102"
   mitm:
+    - "biliverse.github.io"
     - "app.bilibili.com"
     - "*.mcdn.bilivideo.cn"
     - "*.mcdn.bilivideo.cn:4483"
@@ -47,7 +48,7 @@ http:
     - ^https:\/\/upos-sz-mirror[a-z0-9-]*bstar1\.bilivideo\.com(?::(?:443|4483))?\/upgcxcode\/ https://\{{{Host.BStar}}}/upgcxcode/ header
     - ^https:\/\/upos-bstar1-mirrorakam\.akamaized\.net(?::(?:443|4483))?\/upgcxcode\/ https://\{{{Host.BStar}}}/upgcxcode/ header
   script:
-    - match: ^https:\/\/app\.bilibili\.com\/biliverse\/settings\/api\/Redirect(?:\?.*)?$
+    - match: ^https:\/\/biliverse\.github\.io\/settings\/api\/Redirect(?:\?.*)?$
       name: "📺 BiliBili.Redirect.request"
       type: request
       require-body: true
