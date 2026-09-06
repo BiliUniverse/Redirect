@@ -30,6 +30,9 @@ force-http-engine-hosts = upos-sz-mirror*.bilivideo.com:80, cn-hk-eq-*.bilivideo
 ^https:\/\/upos-sz-mirror[a-z0-9-]*bstar1\.bilivideo\.com(?::(?:443|4483))?\/upgcxcode\/ https://\{{{Host.BStar}}}/upgcxcode/ header
 ^https:\/\/upos-bstar1-mirrorakam\.akamaized\.net(?::(?:443|4483))?\/upgcxcode\/ https://\{{{Host.BStar}}}/upgcxcode/ header
 
+[Rewrite]
+^https:\/\/biliverse\.github\.io\/settings\/Redirect\/(?:\?.*)?$ mock-response-body data-type=html data-path=https://biliverse.github.io/settings/assets/Redirect.html status-code=200
+
 [Script]
 http-request ^https:\/\/biliverse\.github\.io\/settings\/api\/Redirect(?:\?.*)?$ requires-body=1, script-path=https://gist.githubusercontent.com/VirgilClyne/0c193c4ff4b930d765b1ca4b406ec1b9/raw/request.dev.bundle.js, tag=📺 BiliBili.Redirect.Settings, argument={{{scriptParams}}}
 http-request ^https?:\/\/.+\.bilivideo\.com(?::(?:80|443|4483))?\/upgcxcode\/ script-path=https://gist.githubusercontent.com/VirgilClyne/0c193c4ff4b930d765b1ca4b406ec1b9/raw/request.dev.bundle.js, tag=📺 BiliBili.Redirect.CDN.upgcxcode.m4s, argument={{{scriptParams}}}
