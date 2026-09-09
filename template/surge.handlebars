@@ -30,10 +30,10 @@ force-http-engine-hosts = %APPEND% upos-sz-mirror*.bilivideo.com:80, cn-hk-eq-*.
 ^https:\/\/upos-bstar1-mirrorakam\.akamaized\.net(?::(?:443|4483))?\/upgcxcode\/ https://\{{{Host.BStar}}}/upgcxcode/ header
 
 [Map Local]
-^https:\/\/biliverse\.github\.io\/settings\/Redirect\/(?:\?.*)?$ data-type=file data="https://biliverse.github.io/settings/assets/Redirect.html" status-code=200 header="Content-Type:text/html; charset=utf-8"
+^https:\/\/biliverse\.github\.io\/configs\/Redirect(?:\?.*)?$ data-type=file data="https://github.com/Biliverse/Redirect/releases/download/v{{@package 'version'}}/BiliBili.Redirect.boxjs.json" status-code=200 header="Content-Type:application/json; charset=utf-8|Cache-Control:no-store"
 
 [Script]
-📺 BiliBili.Redirect.Settings = type=http-request, pattern=^https:\/\/biliverse\.github\.io\/settings\/api\/Redirect(?:\?.*)?$, requires-body=1, max-size=65536, script-path=https://github.com/Biliverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
+PreferencePanes.API = type=http-request, pattern=^https:\/\/biliverse\.github\.io\/(?:api\/(?:get|set|delete)|settings\/(?:Redirect\/?|assets\/app\.mjs))(?:\?.*)?$, requires-body=1, max-size=65536, script-path=https://github.com/NSNanoCat/PreferencePanes/releases/latest/download/api.js
 📺 BiliBili.Redirect.CDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/.+\.bilivideo\.com(?::(?:80|443|4483))?\/upgcxcode\/, script-path=https://github.com/Biliverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
 📺 BiliBili.Redirect.MCDN.v1.resource.m4s = type=http-request, pattern=^https?:\/\/[adbcefxy0-9]+\.mcdn\.bilivideo\.cn(?::(?:8000|8082))?\/v1\/resource\/, script-path=https://github.com/Biliverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}
 📺 BiliBili.Redirect.MCDN.upgcxcode.m4s = type=http-request, pattern=^https?:\/\/[adbcefxy0-9]+\.mcdn\.bilivideo\.cn(?::(?:4483|9102))?\/upgcxcode\/, script-path=https://github.com/Biliverse/Redirect/releases/download/v{{@package 'version'}}/request.bundle.js, argument={{{scriptParams}}}

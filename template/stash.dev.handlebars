@@ -48,10 +48,15 @@ http:
     - ^https:\/\/upos-sz-mirror[a-z0-9-]*bstar1\.bilivideo\.com(?::(?:443|4483))?\/upgcxcode\/ https://\{{{Host.BStar}}}/upgcxcode/ header
     - ^https:\/\/upos-bstar1-mirrorakam\.akamaized\.net(?::(?:443|4483))?\/upgcxcode\/ https://\{{{Host.BStar}}}/upgcxcode/ header
   script:
-    - match: ^https:\/\/biliverse\.github\.io\/settings\/api\/Redirect(?:\?.*)?$
-      name: "📺 BiliBili.Redirect.request"
+    - match: ^https:\/\/biliverse\.github\.io\/configs\/Redirect(?:\?.*)?$
+      name: PreferencePanes.Config.Redirect
+      type: request
+      require-body: false
+    - match: ^https:\/\/biliverse\.github\.io\/(?:api\/(?:get|set|delete)|settings\/(?:Redirect\/?|assets\/app\.mjs))(?:\?.*)?$
+      name: PreferencePanes.API
       type: request
       require-body: true
+      max-size: 65536
     - match: ^https?:\/\/.+\.bilivideo\.com(?::(?:80|443|4483))?\/upgcxcode\/
       name: "📺 BiliBili.Redirect.request"
       type: request
@@ -80,6 +85,12 @@ http:
       type: request
       argument:
 script-providers:
+  PreferencePanes.Config.Redirect:
+    url: https://gist.githubusercontent.com/VirgilClyne/0c193c4ff4b930d765b1ca4b406ec1b9/raw/config.dev.bundle.js
+    interval: 86400
+  PreferencePanes.API:
+    url: https://github.com/NSNanoCat/PreferencePanes/releases/latest/download/api.js
+    interval: 86400
   "📺 BiliBili.Redirect.request":
     url: https://gist.githubusercontent.com/VirgilClyne/0c193c4ff4b930d765b1ca4b406ec1b9/raw/request.dev.bundle.js
     interval: 86400

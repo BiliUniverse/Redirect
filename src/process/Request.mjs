@@ -1,4 +1,3 @@
-import { settingsResponse } from "../function/settings.mjs";
 import { URL } from "@nsnanocat/url";
 import { $app, Console } from "@nsnanocat/util";
 import database from "../function/database.mjs";
@@ -21,8 +20,6 @@ export async function Request($request) {
 	 */
 	const { Settings } = setENV("BiliBili", "Redirect", database);
 	Console.logLevel = Settings.LogLevel;
-	$response = settingsResponse($request, Settings);
-	if ($response) return { $request, $response };
 	const originalHostname = url.hostname;
 	// 方法判断
 	switch ($request.method) {

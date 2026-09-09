@@ -1,0 +1,24 @@
+import assert from "node:assert/strict";
+import { readdir, readFile } from "node:fs/promises";
+import test from "node:test";
+
+test("settings integration installs versioned JSON and the common latest API", async () => {
+	for (const name of await readdir(new URL("../template/", import.meta.url))) {
+		if (!name.endsWith(".handlebars") || name.includes("rewrite")) continue;
+		const template = await readFile(new URL(`../template/${name}`, import.meta.url), "utf8");
+		assert.ok(template.includes("https://github.com/NSNanoCat/PreferencePanes/releases/latest/download/api.js"), name);
+		assert.ok(template.includes("api\\/(?:get|set|delete)"), name);
+		const line = template.split("\n").find(line => line.includes("configs") && line.includes("biliverse"));
+		assert.ok(line, name);
+		const pattern = name.startsWith("shadowrocket") ? line.match(/pattern=([^,]+)/)[1] : name.startsWith("stash") ? line.trim().slice("- match: ".length) : line.split(" ")[0];
+		const matcher = new RegExp(pattern);
+		assert.ok(matcher.test("https://biliverse.github.io/configs/Redirect"));
+		assert.ok(matcher.test("https://biliverse.github.io/configs/Redirect?v=1"));
+		for (const pathname of ["/api/Redirect/", "/settings/", "/settings/Redirect", "/configs/Unknown", "/settings/assets/Redirect.boxjs.json", "/settings/assets/Redirect.config.js"]) assert.equal(matcher.test(`https://biliverse.github.io${pathname}`), false, name);
+		assert.doesNotMatch(template, /biliverse\.github\.io\/settings\/assets\//);
+		const development = name.includes(".dev.");
+		const source = development ? "https://gist.githubusercontent.com/VirgilClyne/0c193c4ff4b930d765b1ca4b406ec1b9/raw/" : "https://github.com/Biliverse/Redirect/releases/download/v{{@package 'version'}}/";
+		const file = /^(surge|loon)/.test(name) ? `BiliBili.Redirect${development ? ".dev" : ""}.boxjs.json` : `config${development ? ".dev" : ""}.bundle.js`;
+		assert.ok(template.includes(source + file), name);
+	}
+});
